@@ -1,0 +1,12 @@
+config alert_with_interface_name
+config logdir: <%= $::barnyard2::logdir %>
+config classification_file: <%= $::barnyard2::classification_file %>
+config reference_file:      <%= $::barnyard2::reference_file %>
+config sid_file:            <%= $::barnyard2::sid_file %>
+#config gen_file:            <%= $::barnyard2::gen_file %>
+config hostname: <%= $::barnyard2::hostname %>
+config interface: <%= $::barnyard2::interface %>
+input unified2
+output sguil: sensor_name=<%= $::barnyard2::sguil_sensor_name %> agent_port=<%= $::barnyard2::sguil_agent_port %>
+#output database: alert, mysql, user=root dbname=snorby host=127.0.0.1
+output alert_syslog: LOG_LOCAL6 LOG_ALERT

@@ -1,0 +1,582 @@
+
+suricata::ensure: "present"
+suricata::package_name: "suricata"
+suricata::config_dir: "/etc/suricata"
+suricata::config_name: "suricata.yaml"
+suricata::log_dir: "/var/log/suricata"
+suricata::service_name: "suricata"
+suricata::service_ensure: "running"
+suricata::service_enable: true
+suricata::service_provider: "systemd"
+suricata::service_flags: undef
+suricata::service_runas: undef
+
+suricata::manage_user: true
+suricata::user: "suricata"
+suricata::group: "suricata"
+suricata::basic_configuration_enabled: true
+suricata::configure_epel: false
+suricata::use_dumpcap: false
+suricata::ppa_source: undef
+suricata::basic_classification_config:
+  - "not-suspicious,Not Suspicious Traffic,3"
+  - "unknown,Unknown Traffic,3"
+  - "bad-unknown,Potentially Bad Traffic, 2"
+  - "attempted-recon,Attempted Information Leak,2"
+  - "successful-recon-limited,Information Leak,2"
+  - "successful-recon-largescale,Large Scale Information Leak,2"
+  - "attempted-dos,Attempted Denial of Service,2"
+  - "successful-dos,Denial of Service,2"
+  - "attempted-user,Attempted User Privilege Gain,1"
+  - "unsuccessful-user,Unsuccessful User Privilege Gain,1"
+  - "successful-user,Successful User Privilege Gain,1"
+  - "attempted-admin,Attempted Administrator Privilege Gain,1"
+  - "successful-admin,Successful Administrator Privilege Gain,1"
+  - "rpc-portmap-decode,Decode of an RPC Query,2"
+  - "shellcode-detect,Executable code was detected,1"
+  - "string-detect,A suspicious string was detected,3"
+  - "suspicious-filename-detect,A suspicious filename was detected,2"
+  - "suspicious-login,An attempted login using a suspicious username was detected,2"
+  - "system-call-detect,A system call was detected,2"
+  - "tcp-connection,A TCP connection was detected,4"
+  - "trojan-activity,A Network Trojan was detected, 1"
+  - "unusual-client-port-connection,A client was using an unusual port,2"
+  - "network-scan,Detection of a Network Scan,3"
+  - "denial-of-service,Detection of a Denial of Service Attack,2"
+  - "non-standard-protocol,Detection of a non-standard protocol or event,2"
+  - "protocol-command-decode,Generic Protocol Command Decode,3"
+  - "web-application-activity,access to a potentially vulnerable web application,2"
+  - "web-application-attack,Web Application Attack,1"
+  - "misc-activity,Misc activity,3"
+  - "misc-attack,Misc Attack,2"
+  - "icmp-event,Generic ICMP event,3"
+  - "kickass-porn,SCORE! Get the lotion!,1"
+  - "policy-violation,Potential Corporate Privacy Violation,1"
+  - "default-login-attempt,Attempt to login by a default username and password,2"
+
+suricata::basic_reference_config:
+  - "bugtraq http://www.securityfocus.com/bid/"
+  - "bid http://www.securityfocus.com/bid/"
+  - "cve http://cve.mitre.org/cgi-bin/cvename.cgi?name="
+  - "secunia http://www.secunia.com/advisories/"
+  - "arachNIDS http://www.whitehats.com/info/IDS"
+  - "McAfee http://vil.nai.com/vil/content/v_"
+  - "nessus http://cgi.nessus.org/plugins/dump.php3?id="
+  - "url http://"
+  - "et http://doc.emergingthreats.net/"
+  - "etpro http://doc.emergingthreatspro.com/"
+  - "telus http://"
+  - "osvdb http://osvdb.org/show/osvdb/"
+  - "threatexpert http://www.threatexpert.com/report.aspx?md5="
+  - "md5 http://www.threatexpert.com/report.aspx?md5="
+  - "exploitdb http://www.exploit-db.com/exploits/"
+  - "openpacket https://www.openpacket.org/capture/grab/"
+  - "securitytracker http://securitytracker.com/id?"
+  - "secunia http://secunia.com/advisories/"
+  - "xforce http://xforce.iss.net/xforce/xfdb/"
+  - "msft http://technet.microsoft.com/security/bulletin/"
+
+suricata::basic_main_config:
+  vars:
+    address-groups:
+      HOME_NET: "[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12]"
+      EXTERNAL_NET: "!$HOME_NET"
+      HTTP_SERVERS: "$HOME_NET"
+      SMTP_SERVERS: "$HOME_NET"
+      SQL_SERVERS: "$HOME_NET"
+      DNS_SERVERS: "$HOME_NET"
+      TELNET_SERVERS: "$HOME_NET"
+      AIM_SERVERS: "$EXTERNAL_NET"
+      DNP3_SERVER: "$HOME_NET"
+      DNP3_CLIENT: "$HOME_NET"
+      MODBUS_CLIENT: "$HOME_NET"
+      MODBUS_SERVER: "$HOME_NET"
+      ENIP_CLIENT: "$HOME_NET"
+      ENIP_SERVER: "$HOME_NET"
+
+    port-groups:
+      HTTP_PORTS: "80"
+      SHELLCODE_PORTS: "!80"
+      ORACLE_PORTS: "1521"
+      SSH_PORTS: "22"
+      DNP3_PORTS: "20000"
+      MODBUS_PORTS: "502"
+
+  default-rule-path: "/etc/suricata/rules"
+  rule-files:
+   - botcc.rules
+   - ciarmy.rules
+   - compromised.rules
+   - drop.rules
+   - dshield.rules
+   - emerging-attack_response.rules
+   - emerging-chat.rules
+   - emerging-current_events.rules
+   - emerging-dns.rules
+   - emerging-dos.rules
+   - emerging-exploit.rules
+   - emerging-ftp.rules
+   - emerging-imap.rules
+   - emerging-malware.rules
+   - emerging-misc.rules
+   - emerging-mobile_malware.rules
+   - emerging-netbios.rules
+   - emerging-p2p.rules
+   - emerging-policy.rules
+   - emerging-pop3.rules
+   - emerging-rpc.rules
+   - emerging-scan.rules
+   - emerging-shellcode.rules
+   - emerging-smtp.rules
+   - emerging-snmp.rules
+   - emerging-sql.rules
+   - emerging-telnet.rules
+   - emerging-tftp.rules
+   - emerging-trojan.rules
+   - emerging-user_agents.rules
+   - emerging-voip.rules
+   - emerging-web_client.rules
+   - emerging-web_server.rules
+   - emerging-worm.rules
+   - tor.rules
+   - http-events.rules    
+   - smtp-events.rules    
+   - dns-events.rules     
+   - tls-events.rules     
+
+  classification-file: "/etc/suricata/classification.config"
+  reference-config-file: "/etc/suricata/reference.config"
+  default-log-dir: "/var/log/suricata"
+
+  stats:
+    enabled: yes
+    interval: 8
+  
+  outputs:
+    - fast:
+        enabled: yes
+        filename: fast.log
+        append: yes
+
+    - eve-log:
+        enabled: yes
+        filetype: regular 
+        filename: eve.json
+        types:
+          - alert:
+              http: yes                
+              tls: yes                 
+              ssh: yes                 
+              smtp: yes                
+              dnp3: yes                
+              tagged-packets: yes
+
+          - http:
+              extended: yes
+
+          - dns:
+              query: yes     
+              answer: yes
+
+          - tls:
+              extended: yes
+
+          - files:
+              force-magic: no
+
+          - smtp:
+          - ssh
+          - stats:
+              totals: yes
+              threads: no
+              deltas: no
+
+          - flow
+
+    - http-log:
+        enabled: no
+        filename: http.log
+        append: yes
+
+    - tls-log:
+        enabled: no  
+        filename: tls.log
+        append: yes
+
+    - tls-store:
+        enabled: no
+
+    - dns-log:
+        enabled: no
+        filename: dns.log
+        append: yes
+
+    - pcap-log:
+        enabled: no
+        filename: log.pcap
+        limit: 1000mb
+        max-files: 2000
+        mode: normal 
+        use-stream-depth: no 
+        honor-pass-rules: no
+
+    - alert-prelude:
+        enabled: no
+        profile: suricata
+        log-packet-content: no
+        log-packet-header: yes
+
+    - stats:
+        enabled: yes
+        filename: stats.log
+        totals: yes
+        threads: no
+
+    - syslog:
+        enabled: no
+        facility: local5
+
+    - drop:
+        enabled: no
+        filename: drop.log
+        append: yes
+
+    - file-store:
+        enabled: no       
+        log-dir: files
+        force-magic: no
+        force-filestore: no
+
+    - file-log:
+        enabled: no
+        filename: files-json.log
+        append: yes
+        force-magic: no
+
+    - tcp-data:
+        enabled: no
+        type: file
+        filename: tcp-data.log
+
+    - http-body-data:
+        enabled: no
+        type: file
+        filename: http-data.log
+
+    - lua:
+        enabled: no
+        scripts:
+
+  logging:
+    default-log-level: notice
+    default-output-filter:
+
+    outputs:
+    - console:
+        enabled: yes
+
+    - file:
+        enabled: yes
+        level: info
+        filename: /var/log/suricata/suricata.log
+
+    - syslog:
+        enabled: no
+        facility: local5
+        format: "[%i] <%d> -- "
+
+  af-packet:
+    - interface: eth0
+      cluster-id: 99
+      cluster-type: cluster_flow
+      defrag: yes
+    - interface: default
+
+  pcap:
+    - interface: eth0
+    - interface: default
+
+  pcap-file:
+    checksum-checks: auto
+
+  app-layer:
+    protocols:
+      tls:
+        enabled: yes
+        detection-ports:
+          dp: 443
+
+      dcerpc:
+        enabled: yes
+
+      ftp:
+        enabled: yes
+
+      ssh:
+        enabled: yes
+
+      smtp:
+        enabled: yes
+        mime:
+          decode-mime: yes
+          decode-base64: yes
+          decode-quoted-printable: yes
+          header-value-depth: 2000
+          extract-urls: yes
+          body-md5: no
+
+        inspected-tracker:
+          content-limit: 100000
+          content-inspect-min-size: 32768
+          content-inspect-window: 4096
+
+      imap:
+        enabled: detection-only
+
+      msn:
+        enabled: detection-only
+
+      smb:
+        enabled: yes
+        detection-ports:
+          dp: 139
+
+      dns:
+        tcp:
+          enabled: yes
+          detection-ports:
+            dp: 53
+
+        udp:
+          enabled: yes
+          detection-ports:
+            dp: 53
+
+      http:
+        enabled: yes
+        libhtp:
+           default-config:
+             personality: IDS
+             request-body-limit: 100kb
+             response-body-limit: 100kb
+             request-body-minimal-inspect-size: 32kb
+             request-body-inspect-window: 4kb
+             response-body-minimal-inspect-size: 40kb
+             response-body-inspect-window: 16kb
+             response-body-decompress-layer-limit: 2
+             http-body-inline: auto
+             double-decode-path: no
+             double-decode-query: no
+
+           server-config:
+
+  asn1-max-frames: 256
+
+  coredump:
+    max-dump: unlimited
+
+  host-mode: auto
+  unix-command:
+    enabled: auto
+
+  legacy:
+    uricontent: enabled
+
+  engine-analysis:
+    rules-fast-pattern: yes
+    rules: yes
+
+  pcre:
+    match-limit: 3500
+    match-limit-recursion: 1500
+
+  host-os-policy:
+    windows: [0.0.0.0/0]
+    bsd: []
+    bsd-right: []
+    old-linux: []
+    linux: []
+    old-solaris: []
+    solaris: []
+    hpux10: []
+    hpux11: []
+    irix: []
+    macos: []
+    vista: []
+    windows2k3: []
+
+  defrag:
+    memcap: 32mb
+    hash-size: 65536
+    trackers: 65535 
+    max-frags: 65535 
+    prealloc: yes
+    timeout: 60
+
+  flow:
+    memcap: 128mb
+    hash-size: 65536
+    prealloc: 10000
+    emergency-recovery: 30
+
+  vlan:
+    use-for-tracking: true
+
+  flow-timeouts:
+
+    default:
+      new: 30
+      established: 300
+      closed: 0
+      bypassed: 100
+      emergency-new: 10
+      emergency-established: 100
+      emergency-closed: 0
+      emergency-bypassed: 50
+
+    tcp:
+      new: 60
+      established: 600
+      closed: 60
+      bypassed: 100
+      emergency-new: 5
+      emergency-established: 100
+      emergency-closed: 10
+      emergency-bypassed: 50
+
+    udp:
+      new: 30
+      established: 300
+      bypassed: 100
+      emergency-new: 10
+      emergency-established: 100
+      emergency-bypassed: 50
+
+    icmp:
+      new: 30
+      established: 300
+      bypassed: 100
+      emergency-new: 10
+      emergency-established: 100
+      emergency-bypassed: 50
+
+  stream:
+    memcap: 64mb
+    checksum-validation: yes
+    inline: auto 
+    reassembly:
+      memcap: 256mb
+      depth: 1mb 
+      toserver-chunk-size: 2560
+      toclient-chunk-size: 2560
+      randomize-chunk-size: yes
+
+  host:
+    hash-size: 4096
+    prealloc: 1000
+    memcap: 32mb
+
+  detect:
+    profile: medium
+    custom-values:
+      toclient-groups: 3
+      toserver-groups: 25
+
+    sgh-mpm-context: auto
+    inspection-recursion-limit: 3000
+
+    prefilter:
+      default: mpm
+
+    grouping:
+
+    profiling:
+      grouping:
+        dump-to-disk: false
+        include-rules: false 
+        include-mpm-stats: false
+
+  mpm-algo: auto
+  spm-algo: auto
+  
+  threading:
+    set-cpu-affinity: no
+    cpu-affinity:
+      - management-cpu-set:
+          cpu: [ 0 ]  
+
+      - receive-cpu-set:
+          cpu: [ 0 ]  
+
+      - worker-cpu-set:
+          cpu: [ "all" ]
+          mode: "exclusive"
+          prio:
+            low: [ 0 ]
+            medium: [ "1-2" ]
+            high: [ 3 ]
+            default: "medium"
+
+    detect-thread-ratio: 1.0
+
+  profiling:
+    rules:
+      enabled: yes
+      filename: rule_perf.log
+      append: yes
+      sort: avgticks
+      limit: 100
+      json: yes
+
+    keywords:
+      enabled: yes
+      filename: keyword_perf.log
+      append: yes
+
+    rulegroups:
+      enabled: yes
+      filename: rule_group_perf.log
+      append: yes
+
+    packets:
+
+      enabled: yes
+      filename: packet_stats.log
+      append: yes
+
+      csv:
+        enabled: no
+        filename: packet_stats.csv
+
+    locks:
+      enabled: no
+      filename: lock_stats.log
+      append: yes
+
+    pcap-log:
+      enabled: no
+      filename: pcaplog_stats.log
+      append: yes
+
+  nfq:
+
+  nflog:
+    - group: 2
+      buffer-size: 18432
+    - group: default
+      qthreshold: 1
+      qtimeout: 100
+      max-size: 20000
+
+  capture:
+
+  netmap:
+   - interface: eth2
+   - interface: default
+
+  pfring:
+    - interface: eth0
+      threads: 1
+      cluster-id: 99
+      cluster-type: cluster_flow
+    - interface: default

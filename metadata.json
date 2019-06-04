@@ -1,0 +1,16 @@
+{
+  "name": "buzzdeee-barnyard2",
+  "version": "0.1.0",
+  "author": "Sebastian Reitenbach",
+  "summary": "A puppet module to manage barnyard2",
+  "license": "MIT",
+  "source": "https://github.com/buzzdeee/buzzdeee-barnyard2",
+  "project_page": "https://github.com/buzzdeee/buzzdeee-barnyard2",
+  "issues_url": "https://github.com/buzzdeee/buzzdeee-barnyard2/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+  ,
+  "data_provider": null
+}
+
