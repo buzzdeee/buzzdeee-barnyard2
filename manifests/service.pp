@@ -3,8 +3,8 @@ class barnyard2::service {
   service { 'barnyard2':
     ensure => 'running',
     enable => true,
-    flags  => $::suricata::service_flags,
-    runas  => $::suricata::service_runas,
+    flags  => $::barnyard2::service_flags,
+    runas  => $::barnyard2::service_runas,
   }
 
 }
