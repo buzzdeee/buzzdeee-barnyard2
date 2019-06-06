@@ -4,7 +4,6 @@ class barnyard2::service {
     ensure => 'running',
     enable => true,
     flags  => $::barnyard2::service_flags,
-    runas  => $::barnyard2::service_runas,
   }
 
 }

@@ -53,7 +53,6 @@ class barnyard2 (
   String $sguil_agent_port,
   String $service_flags,
   Optional[String] $gen_file,
-  Optional[String] $service_runas,
 ) {
 
   contain ::barnyard2::install
